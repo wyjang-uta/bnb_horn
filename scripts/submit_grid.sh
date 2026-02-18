@@ -1,25 +1,28 @@
 #!/bin/bash
 
-CURRENT=300000
-RUN_NUM=1
+CURRENT=176000
+RUN_NUM=5
 NSUBRUNS=100
+EXPERIMENT=$(hostname | sed 's/gpvm*.*//')
 
 # Submit a job to the grid
-BASE_APP_DIR="/exp/dune/app/users/${USER}"
-BASE_DATA_DIR="/pnfs/dune/scratch/users/${USER}/dune/bnb/horn/run${RUN_NUM}"
+BASE_APP_DIR="/exp/${EXPERIMENT}/app/users/${USER}"
+BASE_DATA_DIR="/pnfs/${EXPERIMENT}/scratch/users/${USER}/sbn/sbnd/bnb_horn"
 EXE_FILE="$BASE_APP_DIR/bin/bnb_horn"
-MACRO_FILE="$BASE_APP_DIR/share/dune/bnb/horn/macros/POT_100k.mac"
+SCRIPT_DIR="$BASE_APP_DIR/share/sbn/sbnd/horn_sim/scripts"
+MACRO_DIR="$BASE_APP_DIR/share/sbn/sbnd/horn_sim/macros"
+MACRO_FILE="$MACRO_DIR/POT_100.mac"
 OUTPUT_DATA_DIR="$BASE_DATA_DIR/run${RUN_NUM}"
 
 # Ensure output directory exists, create if it doesn't
-ifdh ls $OUTPUT_DATA_DIR >/dev/null 2>&1 || htgettoken -a htvaultprod.fnal.gov -i dune -r interactive;ifdh mkdir_p $OUTPUT_DATA_DIR
+ifdh ls $OUTPUT_DATA_DIR >/dev/null 2>&1 || htgettoken -a htvaultprod.fnal.gov -i ${EXPERIMENT};ifdh mkdir_p $OUTPUT_DATA_DIR
 OUTPUT_FILE="result_${RUN_NUM}_${SEED}_${CURRENT}.root"
 
 echo "Preparing job assets ... "
 ASSET_FILE_NAME="scripts_$(date +%Y%m%d_%H%M).tar.gz"
 echo "Target: ${ASSET_FILE_NAME}"
 echo "📦 Packing your scripts into a suitcase ($ASSET_FILE_NAME)..."
-tar -cvzf $ASSET_FILE_NAME -C $BASE_APP_DIR/bin $(basename $EXE_FILE) -C $BASE_APP_DIR/share/dune/bnb/horn/macros $(basename $MACRO_FILE)
+tar -cvzf $ASSET_FILE_NAME -C $BASE_APP_DIR/bin $(basename $EXE_FILE) -C $MACRO_DIR $(basename $MACRO_FILE)
 
 if [ $? -ne 0 ]; then
     echo "Error: Failed to create tarball."
@@ -41,17 +44,17 @@ echo "🚀 Handing over the suitcase to the grid. -- Submitting Run $RUN_NUM wit
 
 # Switch the token for the grid submission
 echo "Switching to DUNE grid environment for job submission..."
-echo "$ htgettoken -a htvaultprod.fnal.gov -i dune"
-htgettoken -a htvaultprod.fnal.gov -i dune
+echo "$ htgettoken -a htvaultprod.fnal.gov -i ${EXPERIMENT}"
+htgettoken -a htvaultprod.fnal.gov -i ${EXPERIMENT}
 SUBMIT_OUT=$(jobsub_submit -N $NSUBRUNS \
-                            --memory=1000MB \
-                            --disk=500MB \
-                            --expected-lifetime=8h \
-                            --group=dune \
+                            --memory=500MB \
+                            --disk=100MB \
+                            --expected-lifetime=1h \
+                            --group=${EXPERIMENT} \
                             --resource-provides=usage_model=OPPORTUNISTIC,DEDICATED \
                             -f dropbox://$EXE_FILE \
                             -f dropbox://$MACRO_FILE \
-                            file:///exp/dune/app/users/${USER}/share/dune/bnb/horn/scripts/agent.sh \
+                            file://${SCRIPT_DIR}/agent.sh \
                             $(basename $EXE_FILE) $(basename $MACRO_FILE) $CURRENT $RUN_NUM $NSUBRUNS $BASE_DATA_DIR
                             2>&1)
 JOB_ID=$(echo "$SUBMIT_OUT" | grep -oP '\d+\.\d+@jobsub\d+\.fnal\.gov' | cut -d'.' -f1)
@@ -81,8 +84,8 @@ while true; do
 done
 
 echo "Switching to DUNE grid environment in interactive mode for data transfer..."
-echo "$ htgettoken -a htvaultprod.fnal.gov -i dune -r interactive"
-htgettoken -a htvaultprod.fnal.gov -i dune -r interactive
+echo "$ htgettoken -a htvaultprod.fnal.gov -i ${EXPERIMENT} -r interactive"
+htgettoken -a htvaultprod.fnal.gov -i ${EXPERIMENT}
 PERSISTENT_OUT_DIR="${BASE_DATA_DIR/scratch/persistent}"
 
 ifdh ls $PERSISTENT_OUT_DIR >/dev/null 2>&1 || ifdh mkdir_p $PERSISTENT_OUT_DIR
