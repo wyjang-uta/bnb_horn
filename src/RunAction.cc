@@ -87,8 +87,9 @@ void RunAction::BeginOfRunAction(const G4Run*)
   analysisManager->CreateNtupleDColumn("daughterPx");
   analysisManager->CreateNtupleDColumn("daughterPy");
   analysisManager->CreateNtupleDColumn("daughterPz");
-  analysisManager->CreateNtupleDColumn("projXat574m");
-  analysisManager->CreateNtupleDColumn("projYat574m");
+  analysisManager->CreateNtupleDColumn("x_ff_beamCoord");
+  analysisManager->CreateNtupleDColumn("y_ff_beamCoord");
+  analysisManager->CreateNtupleDColumn("x_ff_sbndCoord");
   analysisManager->FinishNtuple();
 }
 

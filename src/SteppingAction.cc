@@ -99,7 +99,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
             // Calculate projection at 574 m
             if( nuMom.getZ() > 0.0) {
-                G4double z_target = (574.0 - worldHalfZ) * CLHEP::m;
+                G4double z_target = (110.0 - worldHalfZ) * CLHEP::m;
                 G4double deltaZ = z_target - decayPos.z();
                 x_proj = decayPos.x() + nuMom.getX()/nuMom.getZ() * deltaZ;
                 y_proj = decayPos.y() + nuMom.getY()/nuMom.getZ() * deltaZ;
@@ -123,6 +123,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
             analysisManager->FillNtupleDColumn(12, nuMom.getZ()/CLHEP::GeV);
             analysisManager->FillNtupleDColumn(13, x_proj/CLHEP::m);
             analysisManager->FillNtupleDColumn(14, y_proj/CLHEP::m);
+            analysisManager->FillNtupleDColumn(15, ( x_proj + 0.74 * CLHEP::m ) /CLHEP::m);
             analysisManager->AddNtupleRow();
             }
         }
