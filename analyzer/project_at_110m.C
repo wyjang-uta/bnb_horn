@@ -13,7 +13,10 @@ void project_at_110m(const char* ifname="filename.root", const char* ofname="ofn
         [targetZ](double y, double z, double py, double pz) {
             if (pz == 0) return -9999.9;
             return y + (targetZ - z) * (py / pz);
-        }, {"vertexY", "vertexZ", "daughterPy", "daughterPz"});
-
+        }, {"vertexY", "vertexZ", "daughterPy", "daughterPz"})
+    .Define("x_sbnd",
+        [](double x) {
+        return x + 0.74;
+        }, {"x_at_110m"});
     df_extrapolated.Snapshot("bnb_new", ofname);
 }

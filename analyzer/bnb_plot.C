@@ -17,35 +17,27 @@ void bnb_plot(std::string inputFile="input.root", std::string outputFile="output
     auto df_nue = df_valid.Filter("daughterPDG == 12 && daughterPz > 0");
     auto df_nuebar = df_valid.Filter("daughterPDG == -12 && daughterPz > 0");
 
+    /*
+    auto df_numu_activeVol = df_valid.Filter("daughterPDG=14 && daughterPz > 0 && x_at_110m > -1.26 && x_at_110m < 2.74 && y_at_110m > -2.00 && y_at_110m < 2.00");
+    auto df_numubar_activeVol = df_valid.Filter("daughterPDG=-14 && daughterPz > 0 && x_at_110m > -1.26 && x_at_110m < 2.74 && y_at_110m > -2.00 && y_at_110m < 2.00");
+    auto df_numu_activeVol = df_valid.Filter("daughterPDG=12 && daughterPz > 0 && x_at_110m > -1.26 && x_at_110m < 2.74 && y_at_110m > -2.00 && y_at_110m < 2.00");
+    auto df_numubar_activeVol = df_valid.Filter("daughterPDG=-12 && daughterPz > 0 && x_at_110m > -1.26 && x_at_110m < 2.74 && y_at_110m > -2.00 && y_at_110m < 2.00");
+    */
+
     auto h_energy = df_valid.Histo1D(
-        {"h_energy", "Neutrino Energy; Energy (MeV);Counts", 100, 0, 5000},
+        {"h_energy", "Neutrino Energy; Energy (GeV);Counts", 100, 0, 5},
         "daughterE"
     );
 
     auto h_profile = df_valid.Histo2D(
-        {"h_profile", "Neutrino Profile at ND(574 m); x [mm]; y [mm]", 100, -500, 500, 100, -500, 500},
-        "projXat574m", "projYat574m"
+        {"h_profile", "Neutrino Profile at SBND(110 m); x []; y [m]", 100, -5, 5, 100, -5, 5},
+        "x_sbnd", "y_at_110m"
     );
 
-    auto h_numu_10m_x_10m = df_numu.Histo2D({"h_numu_10m_x_10m", "Neutrino Profile at ND(10 m); x [mm]; y [mm]", 500, -5000, 5000, 500, -5000, 5000},"projXat574m", "projYat574m");
-    auto h_numubar_10m_x_10m = df_numubar.Histo2D({"h_numubar_10m_x_10m", "Neutrino Profile at ND(10 m); x [mm]; y [mm]", 500, -5000, 5000, 500, -5000, 5000},"projXat574m", "projYat574m");
-    auto h_nue_10m_x_10m = df_nue.Histo2D({"h_nue_10m_x_10m", "Neutrino Profile at ND(10 m); x [mm]; y [mm]", 500, -5000, 5000, 500, -5000, 5000},"projXat574m", "projYat574m");
-    auto h_nuebar_10m_x_10m = df_nuebar.Histo2D({"h_nuebar_10m_x_10m", "Neutrino Profile at ND(10 m); x [mm]; y [mm]", 500, -5000, 5000, 500, -5000, 5000},"projXat574m", "projYat574m");
-
-    auto h_numu_100m_x_100m = df_numu.Histo2D({"h_numu_100m_x_100m", "Neutrino Profile at ND(574 m); x [mm]; y [mm]", 500, -50000, 50000, 500, -50000, 50000},"projXat574m", "projYat574m");
-    auto h_numubar_100m_x_100m = df_numubar.Histo2D({"h_numubar_100m_x_100m", "Neutrino Profile at ND(574 m); x [mm]; y [mm]", 500, -50000, 50000, 500, -50000, 50000},"projXat574m", "projYat574m");
-    auto h_nue_100m_x_100m = df_nue.Histo2D({"h_nue_100m_x_100m", "Neutrino Profile at ND(574 m); x [mm]; y [mm]", 500, -50000, 50000, 500, -50000, 50000},"projXat574m", "projYat574m");
-    auto h_nuebar_100m_x_100m = df_nuebar.Histo2D({"h_nuebar_100m_x_100m", "Neutrino Profile at ND(574 m); x [mm]; y [mm]", 500, -50000, 50000, 500, -50000, 50000},"projXat574m", "projYat574m");
-
-    auto h_numu_10000m_x_10000m = df_numu.Histo2D({"h_numu_10000m_x_10000m", "Neutrino Profile at ND(10000 m); x [mm]; y [mm]", 500, -5000000, 5000000, 500, -5000000, 5000000},"projXat574m", "projYat574m");
-    auto h_numubar_10000m_x_10000m = df_numubar.Histo2D({"h_numubar_10000m_x_10000m", "Neutrino Profile at ND(10000 m); x [mm]; y [mm]", 500, -5000000, 5000000, 500, -5000000, 5000000},"projXat574m", "projYat574m");
-    auto h_nue_10000m_x_10000m = df_nue.Histo2D({"h_nue_10000m_x_10000m", "Neutrino Profile at ND(10000 m); x [mm]; y [mm]", 500, -5000000, 5000000, 500, -5000000, 5000000},"projXat574m", "projYat574m");
-    auto h_nuebar_10000m_x_10000m = df_nuebar.Histo2D({"h_nuebar_10000m_x_10000m", "Neutrino Profile at ND(10000 m); x [mm]; y [mm]", 500, -5000000, 5000000, 500, -5000000, 5000000},"projXat574m", "projYat574m");
-
-    auto df_numu_ff = df_numu.Filter("projXat574m > -3500 && projXat574m < 3500 && projYat574m > -1750 && projYat574m < 1750");
-    auto df_numubar_ff = df_numubar.Filter("projXat574m > -3500 && projXat574m < 3500 && projYat574m > -1750 && projYat574m < 1750");
-    auto df_nue_ff = df_nue.Filter("projXat574m > -3500 && projXat574m < 3500 && projYat574m > -1750 && projYat574m < 1750");
-    auto df_nuebar_ff = df_nuebar.Filter("projXat574m > -3500 && projXat574m < 3500 && projYat574m > -1750 && projYat574m < 1750");
+    auto df_numu_ff = df_numu.Filter("x_at_110m > -1.26 && x_at_110m < 2.74 && y_at_110m > -2.00 && y_at_110m < 2.00");
+    auto df_numubar_ff = df_numubar.Filter("x_at_110m > -1.26 && x_at_110m < 2.74 && y_at_110m > -2.00 && y_at_110m < 2.00");
+    auto df_nue_ff = df_nue.Filter("x_at_110m > -1.26 && x_at_110m < 2.74 && y_at_110m > -2.00 && y_at_110m < 2.00");
+    auto df_nuebar_ff = df_nuebar.Filter("x_at_110m > -1.26 && x_at_110m < 2.74 && y_at_110m > -2.00 && y_at_110m < 2.00");
 
     auto h_numu_ff_daughterE = df_numu_ff.Histo1D({"h_numu_ff_daughterE", "Numu daughterE after FF; daughterE; Events", 200, 0, 20},"daughterE");
     auto h_numubar_ff_daughterE = df_numubar_ff.Histo1D({"h_numubar_ff_daughterE", "Numubar daughterE after FF; daughterE; Events", 200, 0, 20},"daughterE");
@@ -55,21 +47,6 @@ void bnb_plot(std::string inputFile="input.root", std::string outputFile="output
     TFile out(outputFile.c_str(), "RECREATE");
     h_energy->Write();
     h_profile->Write();
-
-    h_numu_10m_x_10m->Write();
-    h_numubar_10m_x_10m->Write();
-    h_nue_10m_x_10m->Write();
-    h_nuebar_10m_x_10m->Write();
-
-    h_numu_100m_x_100m->Write();
-    h_numubar_100m_x_100m->Write();
-    h_nue_100m_x_100m->Write();
-    h_nuebar_100m_x_100m->Write();
-
-    h_numu_10000m_x_10000m->Write();
-    h_numubar_10000m_x_10000m->Write();
-    h_nue_10000m_x_10000m->Write();
-    h_nuebar_10000m_x_10000m->Write();
 
     h_numu_ff_daughterE->Write();
     h_numubar_ff_daughterE->Write();
