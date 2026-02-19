@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
+#source /cvmfs/icarus.opensciencegrid.org/products/icarus/setup_icarus.sh
 #source /cvmfs/larsoft.opensciencegrid.org/spack-packages/setup-env.sh
 source /cvmfs/larsoft.opensciencegrid.org/spack-v0.22.0-fermi/setup-env.sh
 ROOT_VER=6.28.12
@@ -14,14 +14,14 @@ RUN_NUM=$1
 ANALYZER_SCRIPT_FILE=$2
 USER=$3
 SEED=$((RUN_NUM * 1000 + PROCESS))
-INPUT_BASE_DIR="/pnfs/dune/persistent/users/wyjang/dune/bnb/horn/run$RUN_NUM"
+INPUT_BASE_DIR="/pnfs/icarus/persistent/users/wyjang/sbn/sbnd/bnb_horn/run$RUN_NUM"
 FULL_PATH=$(ifdh ls "$INPUT_BASE_DIR" | grep "result_${RUN_NUM}_${SEED}_" | head -n 1)
 FILENAME=$(basename "$FULL_PATH")
 MAG_FIELD=$(echo "$FILENAME" | cut -d'_' -f4 | sed 's/.root//')
-XROOTD_URL="root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/wyjang/dune/bnb/horn/run$RUN_NUM/result_${RUN_NUM}_${SEED}_${MAG_FIELD}.root"
+XROOTD_URL="root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/icarus/persistent/users/wyjang/icarus/bnb/horn/run$RUN_NUM/result_${RUN_NUM}_${SEED}_${MAG_FIELD}.root"
 INPUT_FILE="${XROOTD_URL}"
 OUTPUT_FILE="anaout_${RUN_NUM}_${SEED}_${MAG_FIELD}.root"
-PNFS_DEST_DIR="/pnfs/dune/scratch/users/$USER/dune/bnb/horn/run$RUN_NUM/anaout/"
+PNFS_DEST_DIR="/pnfs/icarus/scratch/users/$USER/sbn/sbnd/bnb_horn/run$RUN_NUM/anaout/"
 
 cd ${CONDOR_DIR_INPUT}
 time root -b -q -l "${ANALYZER_SCRIPT_FILE}(\"${INPUT_FILE}\", \"${OUTPUT_FILE}\")"

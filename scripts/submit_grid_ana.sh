@@ -2,7 +2,7 @@
 
 # This script submit analysis jobs using jobsub_submit command to the Fermilab grid cluster system.
 
-RUN_NUM=2
+RUN_NUM=8
 NSUBRUNS=100
 # Set the base directory
 ABS_PATH="$(cd .. && pwd -P)"
