@@ -70,7 +70,7 @@ void DetectorConstruction::ConstructWorld(G4VPhysicalVolume*& physWorld)
 {
   G4NistManager* nist = G4NistManager::Instance();
 
-  G4Material* world_mat = nist->FindOrBuildMaterial("G4_AIR");
+  G4Material* world_mat = nist->FindOrBuildMaterial("G4_Galactic");
 
   G4double world_size_xy = 200.0 * m;
   G4double world_size_z = 500.0 * m;
