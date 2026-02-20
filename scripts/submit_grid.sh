@@ -1,17 +1,20 @@
 #!/bin/bash
 
+# Simulation general configurations
+EXPERIMENT=$(hostname | sed 's/gpvm*.*//')
 CURRENT=176000
 RUN_NUM=5
 NSUBRUNS=1
-EXPERIMENT=$(hostname | sed 's/gpvm*.*//')
 
 # Submit a job to the grid
 BASE_APP_DIR="/exp/${EXPERIMENT}/app/users/${USER}"
 BASE_DATA_DIR="/pnfs/${EXPERIMENT}/scratch/users/${USER}/sbn/sbnd/bnb_horn"
 EXE_FILE="$BASE_APP_DIR/bin/bnb_horn"
+EXE_NAME=$(basename $EXE_FILE)
 SCRIPT_DIR="$BASE_APP_DIR/share/sbn/sbnd/bnb_horn/scripts"
 MACRO_DIR="$BASE_APP_DIR/share/sbn/sbnd/bnb_horn/macros"
 MACRO_FILE="$MACRO_DIR/POT_100.mac"
+MACRO_NAME=$(basename $MACRO_FILE)
 OUTPUT_DATA_DIR="$BASE_DATA_DIR/run${RUN_NUM}"
 
 # Ensure output directory exists, create if it doesn't
@@ -22,7 +25,7 @@ echo "Preparing job assets ... "
 ASSET_FILE_NAME="scripts_$(date +%Y%m%d_%H%M).tar.gz"
 echo "Target: ${ASSET_FILE_NAME}"
 echo "📦 Packing your scripts into a suitcase ($ASSET_FILE_NAME)..."
-tar -cvzf $ASSET_FILE_NAME -C $BASE_APP_DIR/bin $(basename $EXE_FILE) -C $MACRO_DIR $(basename $MACRO_FILE)
+tar -cvzf $ASSET_FILE_NAME -C $BASE_APP_DIR/bin $EXE_NAME -C $MACRO_DIR $MACRO_NAME
 
 if [ $? -ne 0 ]; then
     echo "Error: Failed to create tarball."
@@ -55,7 +58,7 @@ SUBMIT_OUT=$(jobsub_submit -N $NSUBRUNS \
                             -f dropbox://$EXE_FILE \
                             -f dropbox://$MACRO_FILE \
                             file://${SCRIPT_DIR}/agent.sh \
-                            $(basename $EXE_FILE) $(basename $MACRO_FILE) $CURRENT $RUN_NUM $NSUBRUNS $BASE_DATA_DIR
+                            $EXE_NAME $MACRO_NAME $CURRENT $RUN_NUM $NSUBRUNS $BASE_DATA_DIR
                             2>&1)
 JOB_ID=$(echo "$SUBMIT_OUT" | grep -oP '\d+\.\d+@jobsub\d+\.fnal\.gov' | cut -d'.' -f1)
 
