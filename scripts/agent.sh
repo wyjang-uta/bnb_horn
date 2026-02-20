@@ -18,7 +18,7 @@ spack find -l clhep
 spack load /cvjfrla
 spack load /r2dcnvb
 spack load /lrli3f5
-ifdh mkdir_p $BASE_DATA_DIR/dune/bnb/horn/run${RUN_NUM}
+ifdh mkdir_p $BASE_DATA_DIR/sbn/sbnd/bnb_horn/run${RUN_NUM}
 export G4DIR=$(spack location -i /r2dcnvb)
 export Geant4_DIR=$G4DIR/lib64/Geant4-10.6.1
 export CMAKE_PREFIX_PATH=$G4DIR:$(spack location -i /cvjfrla):$CMAKE_PREFIX_PATH
