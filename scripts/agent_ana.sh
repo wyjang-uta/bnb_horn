@@ -18,17 +18,17 @@ INPUT_BASE_DIR="/pnfs/icarus/persistent/users/wyjang/sbn/sbnd/bnb_horn/run$RUN_N
 FULL_PATH=$(ifdh ls "$INPUT_BASE_DIR" | grep "result_${RUN_NUM}_${SEED}_" | head -n 1)
 FILENAME=$(basename "$FULL_PATH")
 MAG_FIELD=$(echo "$FILENAME" | cut -d'_' -f4 | sed 's/.root//')
-XROOTD_URL="root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/icarus/persistent/users/wyjang/icarus/bnb/horn/run$RUN_NUM/result_${RUN_NUM}_${SEED}_${MAG_FIELD}.root"
+XROOTD_URL="root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/icarus/persistent/users/wyjang/sbn/sbnd/bnb_horn/run$RUN_NUM/result_${RUN_NUM}_${SEED}_${MAG_FIELD}.root"
 INPUT_FILE="${XROOTD_URL}"
 OUTPUT_FILE="anaout_${RUN_NUM}_${SEED}_${MAG_FIELD}.root"
 PNFS_DEST_DIR="/pnfs/icarus/scratch/users/$USER/sbn/sbnd/bnb_horn/run$RUN_NUM/anaout/"
 
 cd ${CONDOR_DIR_INPUT}
-time root -b -q -l "${ANALYZER_SCRIPT_FILE}(\"${INPUT_FILE}\", \"${OUTPUT_FILE}\")"
+/usr/bin/time root -b -q -l "${ANALYZER_SCRIPT_FILE}(\"${INPUT_FILE}\", \"${OUTPUT_FILE}\")"
 
 if [ -f "${OUTPUT_FILE}" ]; then
     echo "Transferring $OUTPUT_FILE to $PNFS_DEST_DIR ... "
-    ifdh mkdir -p "${PNFS_DEST_DIR}"
+    ifdh mkdir_p "${PNFS_DEST_DIR}"
     ifdh cp -D $OUTPUT_FILE $PNFS_DEST_DIR
 else
     echo "Error: Output file $OUTPUT_FILE not found!"
