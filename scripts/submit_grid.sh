@@ -2,15 +2,15 @@
 
 CURRENT=176000
 RUN_NUM=5
-NSUBRUNS=100
+NSUBRUNS=1
 EXPERIMENT=$(hostname | sed 's/gpvm*.*//')
 
 # Submit a job to the grid
 BASE_APP_DIR="/exp/${EXPERIMENT}/app/users/${USER}"
 BASE_DATA_DIR="/pnfs/${EXPERIMENT}/scratch/users/${USER}/sbn/sbnd/bnb_horn"
 EXE_FILE="$BASE_APP_DIR/bin/bnb_horn"
-SCRIPT_DIR="$BASE_APP_DIR/share/sbn/sbnd/horn_sim/scripts"
-MACRO_DIR="$BASE_APP_DIR/share/sbn/sbnd/horn_sim/macros"
+SCRIPT_DIR="$BASE_APP_DIR/share/sbn/sbnd/bnb_horn/scripts"
+MACRO_DIR="$BASE_APP_DIR/share/sbn/sbnd/bnb_horn/macros"
 MACRO_FILE="$MACRO_DIR/POT_100.mac"
 OUTPUT_DATA_DIR="$BASE_DATA_DIR/run${RUN_NUM}"
 
