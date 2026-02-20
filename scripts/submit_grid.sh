@@ -47,7 +47,7 @@ echo "Switching to DUNE grid environment for job submission..."
 echo "$ htgettoken -a htvaultprod.fnal.gov -i ${EXPERIMENT}"
 htgettoken -a htvaultprod.fnal.gov -i ${EXPERIMENT}
 SUBMIT_OUT=$(jobsub_submit -N $NSUBRUNS \
-                            --memory=500MB \
+                            --memory=1000MB \
                             --disk=100MB \
                             --expected-lifetime=1h \
                             --group=${EXPERIMENT} \

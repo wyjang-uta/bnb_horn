@@ -14,9 +14,9 @@ USER=${USER}
 
 htgettoken -a htvaultprod.fnal.gov -i ${EXPERIMENT}
 jobsub_submit -N $NSUBRUNS \
-    --memory=400MB \
-    --disk=50MB \
-    --expected-lifetime=1h \
+    --memory=1000MB \
+    --disk=100MB \
+    --expected-lifetime=8h \
     --group=${EXPERIMENT} \
     --resource-provides=usage_model=OPPORTUNISTIC,DEDICATED \
     -f dropbox://$ANALYZER_SCRIPT_FILE \
