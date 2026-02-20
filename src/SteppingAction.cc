@@ -99,7 +99,7 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
 
             // Calculate projection at 574 m
             if( nuMom.getZ() > 0.0) {
-                G4double z_target = (110.0 - worldHalfZ) * CLHEP::m;
+                G4double z_target = 110.0 * CLHEP::m;
                 G4double deltaZ = z_target - decayPos.z();
                 x_proj = decayPos.x() + nuMom.getX()/nuMom.getZ() * deltaZ;
                 y_proj = decayPos.y() + nuMom.getY()/nuMom.getZ() * deltaZ;
