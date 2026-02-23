@@ -9,7 +9,7 @@ void bnb_plot(std::string inputFile="input.root", std::string outputFile="output
     if (!f || f->IsZombie()) {
       std::cerr << "Input file: " << inputFile << " not found!\n";;
       return;
-    } else if {
+    } else {
       std::cout << inputFile << " successfully opened.\n"
     }
     TString treeName = f->GetListOfKeys()->At(0)->GetName();
