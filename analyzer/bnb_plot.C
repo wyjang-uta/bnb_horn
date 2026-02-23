@@ -6,7 +6,12 @@
 
 void bnb_plot(std::string inputFile="input.root", std::string outputFile="output.root"){
     TFile* f = TFile::Open(inputFile.c_str());
-    if (!f || f->IsZombie()) return;
+    if (!f || f->IsZombie()) {
+      std::cerr << "Input file: " << inputFile << " not found!\n";;
+      return;
+    } else if {
+      std::cout << inputFile << " successfully opened.\n"
+    }
     TString treeName = f->GetListOfKeys()->At(0)->GetName();
     ROOT::RDataFrame df(treeName, inputFile);
 
@@ -26,6 +31,7 @@ void bnb_plot(std::string inputFile="input.root", std::string outputFile="output
         "x_ff_sbndCoord", "y_ff_beamCoord"
     );
 
+    std::cout << "Generating Histograms ... \n";
     // x_ff_sbndCoord = x_ff_beamCoord + 0.74
     auto df_numu_ff = df_numu.Filter("x_ff_sbndCoord > -2.00 && x_ff_sbndCoord < 2.00 && y_ff_beamCoord > -2.00 && y_ff_beamCoord < 2.00");
     auto df_numubar_ff = df_numubar.Filter("x_ff_sbndCoord > -2.00 && x_ff_sbndCoord < 2.00 && y_ff_beamCoord > -2.00 && y_ff_beamCoord < 2.00");
@@ -37,6 +43,7 @@ void bnb_plot(std::string inputFile="input.root", std::string outputFile="output
     auto h_nue_ff_daughterE = df_nue_ff.Histo1D({"h_nue_ff_daughterE", "Nue daughterE after FF; daughterE; Events", 200, 0, 20},"daughterE");
     auto h_nuebar_ff_daughterE = df_nuebar_ff.Histo1D({"h_nuebar_ff_daughterE", "Nuebar daughterE after FF; daughterE; Events", 200, 0, 20},"daughterE");
 
+    std::cout << "Writing output to the file " << outputFile << std::endl;
     TFile out(outputFile.c_str(), "RECREATE");
     h_energy->Write();
     h_profile->Write();
