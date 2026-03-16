@@ -94,8 +94,8 @@ void DetectorConstruction::ConstructHornA(G4LogicalVolume* logicWorld)
 {
   G4NistManager* nist = G4NistManager::Instance();
   G4Material* aluminum_mat = nist->FindOrBuildMaterial("G4_Al");
-  G4Material* helium_mat = nist->FindOrBuildMaterial("G4_Galactic");  // for a simplified simulation
-  //G4Material* helium_mat = nist->FindOrBuildMaterial("G4_He");
+  //G4Material* helium_mat = nist->FindOrBuildMaterial("G4_Galactic");  // for a simplified simulation
+  G4Material* helium_mat = nist->FindOrBuildMaterial("G4_He");
 
   // --- 3. 혼 파라미터 정의 ---
   G4double current = 174.0 * 1000.0 * ampere; // 300 kA (kiloampere -> 1000*ampere)
@@ -104,27 +104,29 @@ void DetectorConstruction::ConstructHornA(G4LogicalVolume* logicWorld)
   // G4Polycone을 위한 Z 평면 및 반경 정의
   // 여기서는 3개의 Z 평면으로 간단한 깔때기 모양을 만듭니다.
   const G4int numZPlanes = 3;
-  
+
   // Z 위치
   //                          //  Start       Neck        End
   G4double zPlane[numZPlanes] = { 000.0 * cm, 140.0 * cm, 280.0 * cm };
-  
+
   // 각 Z 평면에서의 반경 정의
-  
+
   // r0: 내부 도체의 내부 반경
   G4double rInner_Inner[numZPlanes] = {
     0.35 * cm, 
     0.35 * cm, 
-    13.0 * cm
+    0.35 * cm
+    //13.0 * cm
   };
-  
+
   // r1: 내부 도체의 외부 반경 (자기장 영역의 내부 반경)
   G4double rOuter_Inner[numZPlanes] = {
     2.35 * cm, // 좁은 넥
     2.35 * cm, // 넥 끝
-    15.0 * cm // 넓게 퍼짐
+    2.35 * cm // 넓게 퍼짐
+    //15.0 * cm // 넓게 퍼짐
   };
-  
+
   // r2: 자기장 영역의 외부 반경 (외부 도체의 내부 반경)
   G4double rInner_Outer[numZPlanes] = {
     40.0 * cm, // 좁은 넥
@@ -138,7 +140,6 @@ void DetectorConstruction::ConstructHornA(G4LogicalVolume* logicWorld)
     42.0 * cm, // 넥 끝 (두께 2cm)
     42.0 * cm // 넓게 퍼짐 (두께 2cm)
   };
-
 
   // --- 4. 혼 지오메트리 생성 (3개의 G4Polycone) ---
 
@@ -154,7 +155,7 @@ void DetectorConstruction::ConstructHornA(G4LogicalVolume* logicWorld)
   logicInnerCondA = new G4LogicalVolume(solidInnerCondA,
                                        aluminum_mat,
                                        "LogicInnerCondA");
-    
+
   // (B) 필드 영역 (자기장 있음!)
   G4Polycone* solidFieldRegionA = new G4Polycone("SolidFieldRegionA",
                                                 0., 2. * M_PI,
@@ -216,7 +217,6 @@ void DetectorConstruction::ConstructHornA(G4LogicalVolume* logicWorld)
 
   G4VisAttributes* visAttrOuter = new G4VisAttributes(G4Colour(0.5, 0.5, 0.5, 0.2)); // Grey
   logicOuterCondA->SetVisAttributes(visAttrOuter);
-  
 
   // --- 8. 타겟 볼륨 정의 및 배치 ---
   G4Tubs* solidTarget = new G4Tubs("SolidTarget",
